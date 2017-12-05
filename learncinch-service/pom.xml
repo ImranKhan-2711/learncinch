@@ -8,4 +8,12 @@
   <artifactId>learncinch-service</artifactId>
   <name>learncinch-service</name>
   <description>Service layer for learncinch</description>
+  
+  <dependencies>
+  	<dependency>
+		<groupId>com.learncinch</groupId>
+		<artifactId>learncinch-dao</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+  </dependencies>
 </project>
