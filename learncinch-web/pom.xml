@@ -12,13 +12,25 @@
   <properties>
   <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
-<dependencies>
+	<dependencies>
 		<dependency>
 			<groupId>com.learncinch</groupId>
 			<artifactId>learncinch-service</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-	 
+		<!-- Dependeny for thymeleaf and thymeleaf security -->
+	 <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.mxab.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-data-attribute</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
