@@ -1,4 +1,4 @@
-package com.learcinch.security.auth.ajax;
+package com.learncinch.security.auth.ajax;
 
 import java.io.IOException;
 
@@ -53,7 +53,6 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
         if (StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
             throw new AuthenticationServiceException("Username or Password not provided");
         }
-
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
         return this.getAuthenticationManager().authenticate(token);
 	}

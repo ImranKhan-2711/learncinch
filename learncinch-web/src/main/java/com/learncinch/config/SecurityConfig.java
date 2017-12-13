@@ -1,7 +1,8 @@
-package com.learcinch.config;
+package com.learncinch.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -12,9 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.learcinch.security.auth.ajax.AjaxAwareAuthenticationFailureHandler;
-import com.learcinch.security.auth.ajax.AjaxAwareAuthenticationSuccessHandler;
-import com.learcinch.security.auth.ajax.AjaxLoginProcessingFilter;
+import com.learncinch.security.auth.ajax.AjaxAwareAuthenticationFailureHandler;
+import com.learncinch.security.auth.ajax.AjaxAwareAuthenticationSuccessHandler;
+import com.learncinch.security.auth.ajax.AjaxLoginProcessingFilter;
 
 /**
  * Class to configure spring security User @EnableWebSecurity to enforce
@@ -24,6 +25,7 @@ import com.learcinch.security.auth.ajax.AjaxLoginProcessingFilter;
  *
  */
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public static final String JWT_TOKEN_HEADER_PARAM = "X-Authorization";
 	// API Access points should be somewhat like these
@@ -31,13 +33,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public static final String TOKEN_BASED_AUTH_ENTRY_POINT = "/api/**";
 	public static final String TOKEN_REFRESH_ENTRY_POINT = "/api/auth/token";
 	*/
+	//private static final String[] BY_PASS_SECURITY_PERMITALL_URLS = { "/","/resources/**", FORM_BASED_REGISTRATION_ENTRY_POINT,FORM_BASED_LOGIN_ENTRY_POINT,TOKEN_REFRESH_ENTRY_POINT};
 	public static final String FORM_BASED_LOGIN_ENTRY_POINT = "/login";
 	public static final String FORM_BASED_REGISTRATION_ENTRY_POINT = "/api/auth/registration";
 	
 	public static final String TOKEN_REFRESH_ENTRY_POINT = "/api/auth/token";
 	public static final String TOKEN_BASED_AUTH_ENTRY_POINT = "/api/**";
+	private static final String[] BY_PASS_SECURITY_PERMITALL_URLS = { "/","/login"};
 	
-	private static final String[] BY_PASS_SECURITY_PERMITALL_URLS = { "/","/resources/**", FORM_BASED_REGISTRATION_ENTRY_POINT,FORM_BASED_LOGIN_ENTRY_POINT,TOKEN_REFRESH_ENTRY_POINT};
+	
 	
 	@Autowired
 	private ObjectMapper objectMapper;

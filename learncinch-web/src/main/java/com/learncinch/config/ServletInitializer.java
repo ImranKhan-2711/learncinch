@@ -1,4 +1,4 @@
-package com.learcinch.config;
+package com.learncinch.config;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.learcinch.config;
+package com.learncinch.config;
 
 import java.util.Locale;
 

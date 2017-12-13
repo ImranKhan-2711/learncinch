@@ -1,4 +1,4 @@
-package com.learcinch.security.auth.ajax;
+package com.learncinch.security.auth.ajax;
 
 import java.io.Serializable;
 
