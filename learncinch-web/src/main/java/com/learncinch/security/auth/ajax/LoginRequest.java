@@ -12,12 +12,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LoginRequest implements Serializable{
 	
-	private static final long serialVersionUID = 1596882929179226170L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9094180660025292867L;
 	private String username;
     private String password;
 
     @JsonCreator
-    public LoginRequest(@JsonProperty("username") String username, @JsonProperty("password") String password, @JsonProperty("otp") String otp) {
+    public LoginRequest(@JsonProperty("username") String username, @JsonProperty("password") String password) {
         this.username = username;
         this.password = password;
     }

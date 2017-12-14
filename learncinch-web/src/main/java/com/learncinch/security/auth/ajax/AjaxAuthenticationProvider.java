@@ -14,12 +14,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
 /**
  * THe Authentication Provider to be called along with AjaxLoginProcessingFilter
  * @author Imran
  *
  */
+@Component
 public class AjaxAuthenticationProvider implements AuthenticationProvider{
 	 private static Logger logger = LoggerFactory.getLogger(AjaxAuthenticationProvider.class);
 	 
@@ -72,8 +74,8 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider{
 	}
 
 	@Override
-	public boolean supports(Class<?> authentication) {
-		return false;
-	}
+    public boolean supports(Class<?> authentication) {
+        return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
+    }
 
 }

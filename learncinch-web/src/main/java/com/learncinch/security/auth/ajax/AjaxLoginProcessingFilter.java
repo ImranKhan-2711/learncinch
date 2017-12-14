@@ -48,13 +48,26 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException, IOException, ServletException {
 		
-		LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
+		String json = "{\"username\":\"imran\",\r\n" + 
+			    "\"password\":\"1\"\r\n" + 
+			    "}";
+		/*Gson gson = new Gson(); // Or use new GsonBuilder().create();
+		LoginRequest target2 = gson.fromJson(request.getReader(), LoginRequest.class); */
+		try{
+		LoginRequest loginRequest = objectMapper.readValue(json, LoginRequest.class);
+		request.getReader().lines().collect(java.util.stream.Collectors.joining());
+		
+		//LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
         
         if (StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
             throw new AuthenticationServiceException("Username or Password not provided");
         }
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-        return this.getAuthenticationManager().authenticate(token);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+        return null;
 	}
 	
 	  @Override
