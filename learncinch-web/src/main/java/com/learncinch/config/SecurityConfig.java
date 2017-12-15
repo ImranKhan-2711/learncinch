@@ -36,7 +36,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public static final String TOKEN_REFRESH_ENTRY_POINT = "/api/auth/token";
 	*/
 	//private static final String[] BY_PASS_SECURITY_PERMITALL_URLS = { "/","/resources/**", FORM_BASED_REGISTRATION_ENTRY_POINT,FORM_BASED_LOGIN_ENTRY_POINT,TOKEN_REFRESH_ENTRY_POINT};
-	public static final String FORM_BASED_LOGIN_ENTRY_POINT = "/login";
+	//public static final String FORM_BASED_LOGIN_ENTRY_POINT = "/login";
+	public static final String FORM_BASED_LOGIN_ENTRY_POINT = "/api/auth/login";
 	public static final String FORM_BASED_REGISTRATION_ENTRY_POINT = "/api/auth/registration";
 	
 	public static final String TOKEN_REFRESH_ENTRY_POINT = "/api/auth/token";
