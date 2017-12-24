@@ -66,7 +66,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider{
 			user = new UserDTO(1l, "mandeep", "$2a$10$T3t6RdRjcEwR44T775jsP.NvbgSKMi7x9r1ORQA9gnx86GE6JDfQe");
 		} else if (userName.equals("harman")) {
 			user = new UserDTO(2l, "harman", "$2a$10$T3t6RdRjcEwR44T775jsP.NvbgSKMi7x9r1ORQA9gnx86GE6JDfQe");
-		}else if (userName.equals("imraan")) {
+		}else if (userName.equals("imran")) {
 			user = new UserDTO(3l, "imran", "$2a$10$T3t6RdRjcEwR44T775jsP.NvbgSKMi7x9r1ORQA9gnx86GE6JDfQe");
 		}
 

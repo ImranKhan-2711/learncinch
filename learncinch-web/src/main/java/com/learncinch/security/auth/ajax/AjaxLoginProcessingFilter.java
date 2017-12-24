@@ -62,10 +62,8 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
         if (StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
             throw new AuthenticationServiceException("Username or Password not provided");
         }
-        return  new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-		
-		
-        
+        UsernamePasswordAuthenticationToken token =  new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+        return this.getAuthenticationManager().authenticate(token);
 	}
 	
 	  @Override
