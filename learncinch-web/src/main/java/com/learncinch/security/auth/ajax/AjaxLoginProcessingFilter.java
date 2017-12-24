@@ -51,14 +51,9 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
 		String json = "{\"username\":\"imran\",\r\n" + 
 			    "\"password\":\"1\"\r\n" + 
 			    "}";
-		/*Gson gson = new Gson(); // Or use new GsonBuilder().create();
-		LoginRequest target2 = gson.fromJson(request.getReader(), LoginRequest.class); */
+		LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
+		//request.getReader().lines().collect(java.util.stream.Collectors.joining());
 		
-		LoginRequest loginRequest = objectMapper.readValue(json, LoginRequest.class);
-		request.getReader().lines().collect(java.util.stream.Collectors.joining());
-		
-		//LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
-        
         if (StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
             throw new AuthenticationServiceException("Username or Password not provided");
         }

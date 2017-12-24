@@ -6,9 +6,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+
+import com.learnchinch.security.model.UserContext;
+import com.learncinch.security.auth.jwt.JwtTokenFactory;
 /**
  * Success Handler For AjaxAware AuthenticationFilter
  * @author Mandeep
@@ -17,11 +21,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class AjaxAwareAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+	@Autowired
+	JwtTokenFactory tokenFactory;
+	
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		// TODO Auto-generated method stub
-System.out.println("Authentication success");
+		System.out.println("Authentication success");
+
+		UserContext userContext = (UserContext) authentication.getPrincipal();
+		//JwtToken accessToken = tokenFactory.createAccessJwtToken(userContext);
+		String accessToken = tokenFactory.createAccessJwtToken(userContext);
 	}
 
 }
