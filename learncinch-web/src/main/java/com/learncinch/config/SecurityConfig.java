@@ -1,5 +1,8 @@
 package com.learncinch.config;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -99,9 +102,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 * @throws Exception
 	 */
 	protected JwtTokenAuthenticationFilter buildJwtTokenProcessingFilter() throws Exception {
-		/*List<String> pathsToSkip = Arrays.asList(FORM_BASED_LOGIN_ENTRY_POINT,TOKEN_REFRESH_ENTRY_POINT);
-		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);*/
-		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher();
+		List<String> pathsToSkip = Arrays.asList(FORM_BASED_LOGIN_ENTRY_POINT,TOKEN_REFRESH_ENTRY_POINT);
+		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);
+		/*SkipPathRequestMatcher matcher = new SkipPathRequestMatcher();*/
 		JwtTokenAuthenticationFilter filter = new JwtTokenAuthenticationFilter(ajaxAwareAuthenticationFailureHandler,
 				tokenExtractor, matcher);
 		filter.setAuthenticationManager(this.authenticationManager);

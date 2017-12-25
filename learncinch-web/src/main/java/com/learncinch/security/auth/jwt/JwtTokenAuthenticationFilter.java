@@ -13,31 +13,35 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.learncinch.config.SecurityConfig;
 import com.learncinch.security.jwt.tokenExtractor.TokenExtractor;
+import com.learncinch.security.model.JwtAuthenticationToken;
+import com.learncinch.security.model.RawAccessJwtToken;
 
 /**
- * This filter is used for validation of  
+ * This filter is used for validation of JWT TOken on each request
  * @author Imran Khan
  */
 public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-	
+
 	private final AuthenticationFailureHandler failureHandler;
-    private final TokenExtractor tokenExtractor;
-	//This constructor would be defined once we have a matcher	
-	 @Autowired
-	    public JwtTokenAuthenticationFilter(AuthenticationFailureHandler failureHandler, 
-	            TokenExtractor tokenExtractor, RequestMatcher matcher) {
-	        super(matcher);
-	        this.failureHandler = failureHandler;
-	        this.tokenExtractor = tokenExtractor;
-	    }
-	 
-	 
+	private final TokenExtractor tokenExtractor;
+	
+	@Autowired
+	public JwtTokenAuthenticationFilter(AuthenticationFailureHandler failureHandler, 
+			TokenExtractor tokenExtractor, RequestMatcher matcher) {
+		super(matcher);
+		this.failureHandler = failureHandler;
+		this.tokenExtractor = tokenExtractor;
+	}
+
+
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException, IOException, ServletException {
-		// TODO Auto-generated method stub
-		return null;
+		String tokenPayload = request.getHeader(SecurityConfig.JWT_TOKEN_HEADER_PARAM);
+		RawAccessJwtToken token = new RawAccessJwtToken(tokenExtractor.extract(tokenPayload));
+		return this.getAuthenticationManager().authenticate(new JwtAuthenticationToken(token));
 	}
 
 }

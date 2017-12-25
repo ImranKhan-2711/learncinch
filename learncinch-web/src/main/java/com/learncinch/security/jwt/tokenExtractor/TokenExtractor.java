@@ -9,5 +9,5 @@ package com.learncinch.security.jwt.tokenExtractor;
  */
 public interface TokenExtractor {
 
-public void extract(String payload);	
+public String extract(String payload);	
 }
