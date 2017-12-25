@@ -18,6 +18,9 @@ import com.learncinch.security.auth.ajax.AjaxAuthenticationProvider;
 import com.learncinch.security.auth.ajax.AjaxAwareAuthenticationFailureHandler;
 import com.learncinch.security.auth.ajax.AjaxAwareAuthenticationSuccessHandler;
 import com.learncinch.security.auth.ajax.AjaxLoginProcessingFilter;
+import com.learncinch.security.auth.jwt.JwtTokenAuthenticationFilter;
+import com.learncinch.security.auth.jwt.SkipPathRequestMatcher;
+import com.learncinch.security.jwt.tokenExtractor.TokenExtractor;
 
 /**
  * Class to configure spring security User @EnableWebSecurity to enforce
@@ -59,7 +62,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
-	
+	@Autowired
+	private TokenExtractor tokenExtractor;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -67,7 +71,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		//.and().formLogin().loginPage("/login").permitAll() //This would be removed once we recieve a hit through API login access point
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and().authorizeRequests().antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).authenticated()
-		.and().addFilterBefore(buildAjaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class); // Protected API End points Authenticated here
+		.and().addFilterBefore(buildAjaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class) // Protected API End points Authenticated here
+		.addFilterBefore(buildJwtTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 	
 	@Override
@@ -84,6 +89,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected AjaxLoginProcessingFilter buildAjaxLoginProcessingFilter() throws Exception {
 		AjaxLoginProcessingFilter filter = new AjaxLoginProcessingFilter(FORM_BASED_LOGIN_ENTRY_POINT, ajaxAwareAuthenticationSuccessHandler,
 				ajaxAwareAuthenticationFailureHandler, objectMapper);
+		filter.setAuthenticationManager(this.authenticationManager);
+		return filter;
+	}
+	
+	/**
+	 * The filter to be called before <code>UsernamePasswordAuthenticationFilter</code> filters a request
+	 * @return
+	 * @throws Exception
+	 */
+	protected JwtTokenAuthenticationFilter buildJwtTokenProcessingFilter() throws Exception {
+		/*List<String> pathsToSkip = Arrays.asList(FORM_BASED_LOGIN_ENTRY_POINT,TOKEN_REFRESH_ENTRY_POINT);
+		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);*/
+		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher();
+		JwtTokenAuthenticationFilter filter = new JwtTokenAuthenticationFilter(ajaxAwareAuthenticationFailureHandler,
+				tokenExtractor, matcher);
 		filter.setAuthenticationManager(this.authenticationManager);
 		return filter;
 	}

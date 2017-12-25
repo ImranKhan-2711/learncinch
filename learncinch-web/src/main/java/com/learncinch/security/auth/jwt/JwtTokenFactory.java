@@ -5,12 +5,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import com.learnchinch.security.model.UserContext;
+import com.learncinch.security.model.UserContext;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,16 +20,16 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtTokenFactory {
 
-	 public String createAccessJwtToken(UserContext userContext) {
-	    if (StringUtils.isBlank(userContext.getUsername())) 
+	 public String createAccessJwtToken(Object principal, List authorities) {
+	    if (StringUtils.isBlank(principal.toString())) 
 	        throw new IllegalArgumentException("Cannot create JWT Token without username");
 	
-	    if (userContext.getAuthorities() == null || userContext.getAuthorities().isEmpty()) 
+	    if (authorities == null || authorities.toString().isEmpty()) 
 	        throw new IllegalArgumentException("User doesn't have any privileges");
 	    Claims claims = Jwts.claims();
-	    claims.setSubject(userContext.getUsername());
+	    claims.setSubject(principal.toString());
 	    
-	    claims.put("scopes", userContext.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
+	    claims.put("scopes", authorities.stream().map(s -> s.toString()).collect(Collectors.toList()));
 	    
 	    String token = Jwts.builder()
 	            .setClaims(claims)

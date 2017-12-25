@@ -1,4 +1,4 @@
-package com.learnchinch.security.model;
+package com.learncinch.security.model;
 
 import java.io.Serializable;
 import java.util.List;
