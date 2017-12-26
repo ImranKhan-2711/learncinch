@@ -21,6 +21,7 @@ import com.learncinch.security.auth.ajax.AjaxAuthenticationProvider;
 import com.learncinch.security.auth.ajax.AjaxAwareAuthenticationFailureHandler;
 import com.learncinch.security.auth.ajax.AjaxAwareAuthenticationSuccessHandler;
 import com.learncinch.security.auth.ajax.AjaxLoginProcessingFilter;
+import com.learncinch.security.auth.jwt.JwtAuthenticationProvider;
 import com.learncinch.security.auth.jwt.JwtTokenAuthenticationFilter;
 import com.learncinch.security.auth.jwt.SkipPathRequestMatcher;
 import com.learncinch.security.jwt.tokenExtractor.TokenExtractor;
@@ -37,17 +38,11 @@ import com.learncinch.security.jwt.tokenExtractor.TokenExtractor;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public static final String JWT_TOKEN_HEADER_PARAM = "X-Authorization";
 	// API Access points should be somewhat like these
-	/*public static final String FORM_BASED_LOGIN_ENTRY_POINT = "/api/auth/login";
-	public static final String TOKEN_BASED_AUTH_ENTRY_POINT = "/api/**";
-	public static final String TOKEN_REFRESH_ENTRY_POINT = "/api/auth/token";
-	*/
-	//private static final String[] BY_PASS_SECURITY_PERMITALL_URLS = { "/","/resources/**", FORM_BASED_REGISTRATION_ENTRY_POINT,FORM_BASED_LOGIN_ENTRY_POINT,TOKEN_REFRESH_ENTRY_POINT};
-	//public static final String FORM_BASED_LOGIN_ENTRY_POINT = "/login";
 	public static final String FORM_BASED_LOGIN_ENTRY_POINT = "/api/auth/login";
 	public static final String FORM_BASED_REGISTRATION_ENTRY_POINT = "/api/auth/registration";
 	
-	public static final String TOKEN_REFRESH_ENTRY_POINT = "/api/auth/token";
 	public static final String TOKEN_BASED_AUTH_ENTRY_POINT = "/api/**";
+	public static final String TOKEN_REFRESH_ENTRY_POINT = "/api/auth/token";
 	private static final String[] BY_PASS_SECURITY_PERMITALL_URLS = { "/","/resources/**", FORM_BASED_REGISTRATION_ENTRY_POINT,FORM_BASED_LOGIN_ENTRY_POINT,TOKEN_REFRESH_ENTRY_POINT};
 	
 	@Autowired
@@ -55,6 +50,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private AjaxAuthenticationProvider ajaxAuthenticationProvider;
+	
+	@Autowired
+	private JwtAuthenticationProvider jwtAuthenticationProvider;
 	
 	@Autowired
 	private AjaxAwareAuthenticationFailureHandler ajaxAwareAuthenticationFailureHandler;
@@ -81,11 +79,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(ajaxAuthenticationProvider);
-		super.configure(auth);
+		auth.authenticationProvider(jwtAuthenticationProvider);
 	}
 	
 	/**
 	 * The filter to be called before <code>UsernamePasswordAuthenticationFilter</code> filters a request
+	 * This filter is to be called only on login
 	 * @return
 	 * @throws Exception
 	 */
@@ -98,13 +97,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	/**
 	 * The filter to be called before <code>UsernamePasswordAuthenticationFilter</code> filters a request
+	 * It skips request from token refresh page
+	 * It is mandatory to check the token on every other request(i.e TOKEN_BASED_AUTH_ENTRY_POINT)
 	 * @return
 	 * @throws Exception
 	 */
 	protected JwtTokenAuthenticationFilter buildJwtTokenProcessingFilter() throws Exception {
-		List<String> pathsToSkip = Arrays.asList(FORM_BASED_LOGIN_ENTRY_POINT,TOKEN_REFRESH_ENTRY_POINT);
+		List<String> pathsToSkip = Arrays.asList(TOKEN_REFRESH_ENTRY_POINT);
 		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);
-		/*SkipPathRequestMatcher matcher = new SkipPathRequestMatcher();*/
 		JwtTokenAuthenticationFilter filter = new JwtTokenAuthenticationFilter(ajaxAwareAuthenticationFailureHandler,
 				tokenExtractor, matcher);
 		filter.setAuthenticationManager(this.authenticationManager);
