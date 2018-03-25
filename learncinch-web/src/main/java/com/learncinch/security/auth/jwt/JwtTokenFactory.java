@@ -1,6 +1,5 @@
 package com.learncinch.security.auth.jwt;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -10,8 +9,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-
-import com.learncinch.security.model.UserContext;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

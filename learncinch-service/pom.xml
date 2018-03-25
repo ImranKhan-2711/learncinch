@@ -15,5 +15,10 @@
 		<artifactId>learncinch-dao</artifactId>
 		<version>${project.version}</version>
 	</dependency>
+  	<dependency>
+  		<groupId>com.learncinch</groupId>
+  		<artifactId>learncinch-common</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
   </dependencies>
 </project>

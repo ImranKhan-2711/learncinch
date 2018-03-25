@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -22,21 +23,21 @@ import com.learncinch.security.model.RawAccessJwtToken;
 
 /**
  * This filter is used for validation of JWT TOken on each request
+ * 
  * @author Imran Khan
  */
 public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
 	private final AuthenticationFailureHandler failureHandler;
 	private final TokenExtractor tokenExtractor;
-	
+
 	@Autowired
-	public JwtTokenAuthenticationFilter(AuthenticationFailureHandler failureHandler, 
-			TokenExtractor tokenExtractor, RequestMatcher matcher) {
+	public JwtTokenAuthenticationFilter(AuthenticationFailureHandler failureHandler, TokenExtractor tokenExtractor,
+			RequestMatcher matcher) {
 		super(matcher);
 		this.failureHandler = failureHandler;
 		this.tokenExtractor = tokenExtractor;
 	}
-
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
@@ -45,22 +46,21 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
 		RawAccessJwtToken token = new RawAccessJwtToken(tokenExtractor.extract(tokenPayload));
 		return this.getAuthenticationManager().authenticate(new JwtAuthenticationToken(token));
 	}
-	
-	 @Override
-	    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-	            Authentication authResult) throws IOException, ServletException {
-		 System.out.println("Authentication successful");
-	     /*   SecurityContext context = SecurityContextHolder.createEmptyContext();
-	        context.setAuthentication(authResult);
-	        SecurityContextHolder.setContext(context);
-	        chain.doFilter(request, response);*/
-	    }
 
-	    @Override
-	    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-	            AuthenticationException failed) throws IOException, ServletException {
-	        SecurityContextHolder.clearContext();
-	        failureHandler.onAuthenticationFailure(request, response, failed);
-	    }
+	@Override
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+			Authentication authResult) throws IOException, ServletException {
+		SecurityContext context = SecurityContextHolder.createEmptyContext();
+		context.setAuthentication(authResult);
+		SecurityContextHolder.setContext(context);
+		chain.doFilter(request, response);
+	}
+
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException failed) throws IOException, ServletException {
+		SecurityContextHolder.clearContext();
+		failureHandler.onAuthenticationFailure(request, response, failed);
+	}
 
 }
